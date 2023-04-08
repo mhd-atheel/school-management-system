@@ -1,22 +1,24 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 
 const app = express();
+dotenv.config()
 
 app.get('/',(req,res)=>{
     res.send("Hello Atheel")
 });
 
-app.listen(3000, () => {
-    console.log('Server listening on port 3000');
-  });
+app.listen(process.env.PORT, () => {
+    console.log(`Server listening on port ${process.env.PORT}`);
+});
 
-  mongoose.connect('mongodb+srv://sms:sms2023@sms.qjsicyg.mongodb.net/?retryWrites=true&w=majority', {
+  mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
   .then(() => {
-    console.log('Connected to MongoDB');
+    console.log('Connected to MongoDB SuccessFully');
   })
   .catch((error) => {
     console.log('Error connecting to MongoDB', error);
