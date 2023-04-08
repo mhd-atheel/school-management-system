@@ -15,7 +15,7 @@ app.listen(process.env.PORT, () => {
 
   mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: false
   })
   .then(() => {
     console.log('Connected to MongoDB SuccessFully');
