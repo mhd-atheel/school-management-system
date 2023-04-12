@@ -32,6 +32,16 @@ exports.getAllStudents = async(req,res)=>{
   }
 }
 
+exports.getStudentById = async(req,res)=>{
+
+    try {
+      const id = req.params.id
+      const student = await Student.findById(id)
+      res.status(201).json(student);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+}
 
 
 
