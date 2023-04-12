@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const studentSchema =  mongoose.Schema({
 
-  biodata :[
+  biodata :
     {
       first_name: {
         type: String,
@@ -49,20 +49,32 @@ const studentSchema =  mongoose.Schema({
       type: Number,
       required: false,
   },
-    }
-  ],
+    },
   leaves: [{
-    type: String,
-    required: false
+    reason:{
+      type: String,
+      required: true
+    },
+    date:{
+      type: String,
+      required: true
+    },
   }],
   marks: [{
+    subject:{
+      type: String,
+      required: true
+    },
+    mark:{
+      type: Number,
+      required: true
+    },
+  
+  }],
+  status:{
     type: String,
     required: false
-  }],
-  status : [{
-    type: String,
-    required: false
-  }],
+  },
   complaints : [{
     type: String,
     required: false
@@ -73,5 +85,5 @@ const studentSchema =  mongoose.Schema({
   { timestamps: true }
 );
 
-const User = mongoose.model('User', studentSchema);
+const User = mongoose.model('Students', studentSchema);
 module.exports = User;
