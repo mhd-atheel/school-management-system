@@ -13,26 +13,41 @@ const Student = require('../models/studentModel');
 //   });
 
 
-exports.addStudent = async(req,res)=>{
+const addStudent = async(req,res)=>{
+
   try {
+
     const student = new Student(req.body);
     await student.save();
     res.status(201).json({"data":student});
-  } catch (error) {
+  }
+  
+  catch (error) {
+
     res.status(400).json({ error: error.message });
+
   }
 }
 
-exports.getAllStudents = async(req,res)=>{
+
+const getAllStudents = async(req,res)=>{
+
   try {
     const user = await Student.find()
     res.status(201).json(user);
-  } catch (error) {
+
+  } 
+
+  catch (error) {
+
     res.status(400).json({ error: error.message });
+
   }
 }
 
-exports.getStudentById = async(req,res)=>{
+
+
+const getStudentById = async(req,res)=>{
 
     try {
       const id = req.params.id
@@ -44,4 +59,8 @@ exports.getStudentById = async(req,res)=>{
 }
 
 
-
+module.exports = {
+  addStudent,
+  getAllStudents,
+  getStudentById
+}
