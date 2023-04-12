@@ -1,12 +1,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const Student = require('./models/studentModel')
-
-
-
-
+const StudentRouter = require('./router/studentRouter.js')
 const app = express();
+
+
+
+app.use(express.json());
+
+
 dotenv.config()
 
 app.get('/',(req,res)=>{
@@ -28,26 +30,27 @@ app.listen(process.env.PORT, () => {
     console.log('Error connecting to MongoDB', error);
   });
 
+app.use('/student',StudentRouter)
 
-  app.post('/users', async (req, res) => {
-    try {
-        const student =  new Student({
-          name: req.body.name,
-          email: req.body.email,
-          tel:req.body.tel
-        });
-        await student.save();
-        res.status(201).json(student);
-      } catch (error) {
-        res.status(500).json({ error: error.message });
-      }
-  });
+  // app.post('/users', async (req, res) => {
+  //   try {
+  //       const student =  new Student({
+  //         name: req.body.name,
+  //         email: req.body.email,
+  //         tel:req.body.tel
+  //       });
+  //       await student.save();
+  //       res.status(201).json(student);
+  //     } catch (error) {
+  //       res.status(500).json({ error: error.message });
+  //     }
+  // });
 
-  app.get('/get',async(req,res)=>{
-        const user = await Student.find()
-        res.json(user);
+  // app.get('/get',async(req,res)=>{
+  //       const user = await Student.find()
+  //       res.json(user);
 
-  })
+  // })
 
 
   
