@@ -10,7 +10,7 @@ const addStudent = async(req,res)=>{
   try {
     const {email} = req.body;
     
-    const oldUser = await Student.findOne({email})
+    const oldUser = await Student.findOne({email});
     if(oldUser){
       res.status(409).send("student Email Already Exist".toUpperCase);
     }
@@ -34,7 +34,7 @@ const getAllStudents = async(req,res)=>{
 
   try {
 
-    const user = await Student.find()
+    const user = await Student.find();
     res.status(201).json(user);
 
   } 
@@ -46,6 +46,7 @@ const getAllStudents = async(req,res)=>{
   }
 }
 
+
 // Get Student by ID 
 //http://localhost:3000/student/get-student-by-id/6438372ff37f64f3e8c75ab5
 //GET REQUEST
@@ -54,7 +55,7 @@ const getStudentById = async(req,res)=>{
     try {
 
       const id = req.params.id
-      const student = await Student.findById(id)
+      const student = await Student.findById(id);
       res.status(201).json(student);
 
     } catch (error) {
@@ -73,8 +74,8 @@ const updateStudent = async(req,res)=>{
 
     try {
 
-      const id = req.params.id
-      const body = req.body
+      const id = req.params.id;
+      const body = req.body;
       const student = await Student.findByIdAndUpdate(id, body, { new: true });
       res.status(201).json(student);
 
@@ -93,8 +94,8 @@ const deleteStudent = async(req,res)=>{
 
    try {
     
-    const id = req.params.id
-      await Student.findByIdAndDelete(id)
+    const id = req.params.id;
+      await Student.findByIdAndDelete(id);
       res.status(201).send(">>>>>>> ID OF "+ id +" DELETED SUCCESSFULLY");
     
 
