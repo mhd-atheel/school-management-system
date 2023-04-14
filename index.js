@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const StudentRouter = require('./router/studentRouter.js')
+const TeacherRouter = require('./router/teacherRouter.js')
 const app = express();
 
 
@@ -31,6 +32,7 @@ app.listen(process.env.PORT, () => {
   });
 
 app.use('/student',StudentRouter)
+app.use('/teacher',TeacherRouter)
 
   // app.post('/users', async (req, res) => {
   //   try {
