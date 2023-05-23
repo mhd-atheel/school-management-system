@@ -1,9 +1,13 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const dotenv = require('dotenv');
-const StudentRouter = require('./router/studentRouter.js')
-const TeacherRouter = require('./router/teacherRouter.js')
+const StudentRouter = require('./router/studentRouter.js');
+const TeacherRouter = require('./router/teacherRouter.js');
+const GradeRouter = require('./router/gradeRouter.js');
 const app = express();
+app.use(cors());
+
 
 
 
@@ -13,7 +17,7 @@ app.use(express.json());
 dotenv.config()
 
 app.get('/',(req,res)=>{
-    res.send("Hello Atheexxxxl")
+    res.send(">>>>>>>>> Hello Atheexxxxl")
 });
 
 app.listen(process.env.PORT, () => {
@@ -31,28 +35,14 @@ app.listen(process.env.PORT, () => {
     console.log('Error connecting to MongoDB', error);
   });
 
+
+// Routes
 app.use('/student',StudentRouter)
 app.use('/teacher',TeacherRouter)
+app.use('/grade',GradeRouter)
 
-  // app.post('/users', async (req, res) => {
-  //   try {
-  //       const student =  new Student({
-  //         name: req.body.name,
-  //         email: req.body.email,
-  //         tel:req.body.tel
-  //       });
-  //       await student.save();
-  //       res.status(201).json(student);
-  //     } catch (error) {
-  //       res.status(500).json({ error: error.message });
-  //     }
-  // });
 
-  // app.get('/get',async(req,res)=>{
-  //       const user = await Student.find()
-  //       res.json(user);
 
-  // })
 
 
   
