@@ -1,12 +1,11 @@
 const Teacher = require('../models/teacherModels.js');
 const Student = require('../models/studentModel.js');
 
+
+
+
+
 const addTeacher = async(req,res)=>{
-
-
-
-
-
   try {
     const { biodata, leaves, status, complaints, salary, students } = req.body;
 

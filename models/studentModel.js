@@ -110,6 +110,12 @@ const studentSchema = mongoose.Schema({
       },
     },
   ],
+  siblings: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Student',
+    },
+  ],
 });
 
 const Student = mongoose.model('Student', studentSchema);
