@@ -8,7 +8,7 @@ const bcrypt = require('bcrypt')
 // POST REQUEST
 const addStudent = async(req,res)=>{
   try {
-    const { biodata, email, password, leaves, marks, status, complaints } = req.body;
+    const { biodata, email, password, leaves, marks, status, complaints, siblings } = req.body;
 
     // Create a new student document
     const student = new Student({
@@ -18,13 +18,24 @@ const addStudent = async(req,res)=>{
       leaves,
       marks,
       status,
-      complaints
+      complaints,
+      siblings: []
     });
+
+    for(const studentId of siblings ){
+      const studentS = await Student.findById(studentId);
+      
+      if (!studentS) {
+        return res.status(404).json({ error: `Student with ID ${studentId} not found` });
+      }
+
+      student.siblings.push(studentS._id);
+    }
 
     // Save the student document
     await student.save();
 
-    res.json({ message: 'Student created successfully', student });
+    res.json({ message: 'Student created successfully', studentS });
   } catch (error) {
     res.status(500).json({ error: 'An error occurred' });
   }
