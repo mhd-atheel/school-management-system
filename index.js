@@ -5,6 +5,8 @@ const dotenv = require('dotenv');
 const StudentRouter = require('./router/studentRouter.js');
 const TeacherRouter = require('./router/teacherRouter.js');
 const GradeRouter = require('./router/gradeRouter.js');
+const LeaveRouter = require('./router/leavesRoute.js');
+const AwardsRouter = require('./router/awardsRoute.js');
 const app = express();
 app.use(cors());
 
@@ -14,10 +16,10 @@ app.use(cors());
 app.use(express.json());
 
 
-dotenv.config()
+dotenv.config();
 
 app.get('/',(req,res)=>{
-    res.send(">>>>>>>>> Hello Atheexxxxl")
+    res.send(">>>>>>>>> Hello Atheexxxxl");
 });
 
 app.listen(process.env.PORT, () => {
@@ -37,9 +39,11 @@ app.listen(process.env.PORT, () => {
 
 
 // Routes
-app.use('/student',StudentRouter)
-app.use('/teacher',TeacherRouter)
-app.use('/grade',GradeRouter)
+app.use('/student',StudentRouter);
+app.use('/teacher',TeacherRouter);
+app.use('/grade',GradeRouter);
+app.use('/leave',LeaveRouter);
+app.use('/award',AwardsRouter);
 
 
 
