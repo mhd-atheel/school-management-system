@@ -9,7 +9,9 @@ const GradeSchema  = mongoose.Schema({
         type: String,
         required: true,
       },
-})
+},
+  {timestamps : true}
+)
 
 const grade = mongoose.model('Grades', GradeSchema);
 module.exports = grade;

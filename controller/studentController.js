@@ -1,4 +1,5 @@
-const Student = require('../models/studentModel.js');
+const User = require('../models/studentModel.js');
+// const Student = require('../models/studentModel.js');
 const bcrypt = require('bcrypt')
 
 
@@ -40,6 +41,23 @@ const addStudent = async(req,res)=>{
     res.status(500).json({ error: 'An error occurred' });
   }
 }
+
+
+
+const  addUsers = async(req,res)=>{
+
+  try {
+    const user = new User(req.body);
+    const savedUser = await user.save();
+    res.status(201).json(savedUser);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+
+}
+
+
+
 
 
 // Get All Student
@@ -125,6 +143,7 @@ const deleteStudent = async(req,res)=>{
 
 module.exports = {
   addStudent,
+  addUsers,
   getAllStudents,
   getStudentById,
   updateStudent,
