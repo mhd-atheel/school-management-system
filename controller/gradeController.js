@@ -4,7 +4,7 @@ const addGrade = async(req,res)=>{
 
     try {
         const {grade} = req.body
-        var oldGrade = await Grade.findOne({grade})
+        const oldGrade = await Grade.findOne({grade})
         if(oldGrade){
             res.status(409).send("student Grade Already Exist".toUpperCase);
         }

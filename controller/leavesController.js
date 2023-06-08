@@ -20,24 +20,41 @@ const addLeaves = async (req, res) => {
 
 
 const getLeaves = async (req,res)=>{
+
     try {
+
+
        const leaves = await Leaves.find();
        res.status(201).json(leaves);
-    } catch (error) {
+
+
+    }
+    
+    catch (error) {
+
         res.status(400).json({ error: error.message });
+
     }
 }
 
 
 
 const getLeavesById = async (req, res) => {
+
     const id = req.params.id;
   
     try {
+
+
       const leaves = await Leaves.findById(id);
       res.status(201).json({ data: leaves });
-    } catch (error) {
+
+    } 
+    
+    catch (error) {
+
       res.status(400).json({ error: error.message });
+
     }
 }
 
