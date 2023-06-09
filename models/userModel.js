@@ -12,31 +12,31 @@ const userSchema = mongoose.Schema({
   },
   address: {
     type: String,
-    required: true,
+    required: false,
   },
   nic: {
     type: String,
-    required: true,
+    required: false,
   },
   qualification: {
     type: String,
-    required: true,
+    required: false,
   },
   father_name: {
     type: String,
-    required: true,
+    required: false,
   },
   mother_name: {
     type: String,
-    required: true,
+    required: false,
   },
   telephone: {
     type: Number,
-    required: true,
+    required: false,
   },
   religion: {
     type: String,
-    required: true,
+    required: false,
   },
   profile_image: {
     type: String,
@@ -44,11 +44,11 @@ const userSchema = mongoose.Schema({
   },
   grade: {
     type: String,
-    required: true,
+    required: false,
   },
   allocated_subject: {
     type: String,
-    required: true,
+    required: false,
   },
   dob: {
     type: String,
@@ -113,7 +113,7 @@ const userSchema = mongoose.Schema({
 
   email: {
     type: String,
-    required: true,
+    required: false,
     unique: false,
     validate: {
       validator: (value) => {
@@ -125,7 +125,7 @@ const userSchema = mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
+    required: false,
     validate: {
       validator: (value) => {
         // Check if the password is at least 8 characters long and contains at least one special character
@@ -134,99 +134,11 @@ const userSchema = mongoose.Schema({
       message: 'Password must be at least 8 characters long and contain at least one special character',
     },
   },
-  leaves: [
-    {
-      reason: {
-        type: String,
-        required: true,
-      },
-      date: {
-        type: String,
-        required: true,
-      },
-    },
-  ],
-  awards: [
-    {
-      image: {
-        type: String,
-        required: false,
-      },
-      title: {
-        type: String,
-        required: true,
-      },
-    },
-  ],
-  salary: [
-    {
-      amount: {
-        type: Number,
-        required: true,
-      },
-      date: {
-        type: String,
-        required: true,
-      },
-    },
-  ],
-  penalty_fee: [
-    {
-      amount: {
-        type: Number,
-        required: true,
-      },
-      date: {
-        type: String,
-        required: true,
-      },
-      reason: {
-        type: String,
-        required: true,
-      },
-    },
-  ],
-  marks: [
-    {
-      subject: {
-        type: String,
-        required: true,
-      },
-      mark: {
-        type: Number,
-        required: true,
-      },
-    },
-  ],
   status: {
     type: String,
     required: false,
   },
-  complaints: [
-    {
-      reason: {
-        type: String,
-        required: true,
-      },
-      date: {
-        type: String,
-        required: true,
-      },
-    },
-  ],
-  
-  siblings: [
-    {
-      name: {
-        type: String,
-        required: true,
-      },
-      age: {
-        type: String,
-        required: true,
-      },
-    },
-  ],
+
 });
 
 

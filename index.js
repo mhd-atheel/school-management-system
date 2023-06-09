@@ -9,6 +9,8 @@ const LeaveRouter = require('./router/leavesRoute.js');
 const AwardsRouter = require('./router/awardsRoute.js');
 const SalaryRouter = require('./router/salaryRouter.js');
 const PenaltyRouter = require('./router/penaltyRouter.js');
+const ComplaintsRouter = require('./router/complaintsRouter.js');
+const SiblingsRouter = require('./router/siblingsRouter.js');
 const app = express();
 app.use(cors());
 
@@ -48,6 +50,9 @@ app.use('/leave',LeaveRouter);
 app.use('/award',AwardsRouter);
 app.use('/salary',SalaryRouter);
 app.use('/penalty',PenaltyRouter);
+app.use('/complaint',ComplaintsRouter);
+app.use('/sibling',SiblingsRouter);
+
 
 
 

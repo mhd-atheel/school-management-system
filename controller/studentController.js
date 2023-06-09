@@ -1,4 +1,4 @@
-const User = require('../models/studentModel.js');
+const User = require('../models/userModel.js');
 // const Student = require('../models/studentModel.js');
 const bcrypt = require('bcrypt')
 
@@ -9,34 +9,13 @@ const bcrypt = require('bcrypt')
 // POST REQUEST
 const addStudent = async(req,res)=>{
   try {
-    const { biodata, email, password, leaves, marks, status, complaints, siblings } = req.body;
-
+    
     // Create a new student document
-    const student = new Student({
-      biodata,
-      email,
-      password,
-      leaves,
-      marks,
-      status,
-      complaints,
-      siblings: []
-    });
-
-    for(const studentId of siblings ){
-      const studentS = await Student.findById(studentId);
-      
-      if (!studentS) {
-        return res.status(404).json({ error: `Student with ID ${studentId} not found` });
-      }
-
-      student.siblings.push(studentS._id);
-    }
-
+    const user = new User(req.body);
     // Save the student document
-    await student.save();
+    await user.save();
 
-    res.json({ message: 'Student created successfully', studentS });
+    res.json({ message: 'User created successfully', user });
   } catch (error) {
     res.status(500).json({ error: 'An error occurred' });
   }
@@ -66,7 +45,6 @@ const  addUsers = async(req,res)=>{
 const getAllStudents = async(req,res)=>{
 
   try {
-
     const user = await Student.find();
     res.status(201).json(user);
 
