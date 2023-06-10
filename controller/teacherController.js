@@ -1,5 +1,8 @@
+const { request } = require("express");
 const Teacher = require("../models/teacherModels.js");
-const User = require("../models/userModel.js")
+const User = require("../models/userModel.js");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const addTeacher = async (req, res) => {
   try {
@@ -25,6 +28,7 @@ const addTeacher = async (req, res) => {
       other_docs,
       user_type,
     } = req.body;
+    const hashed = await hashedPassword(password);
 
     // Create a new teacher document
     const teacher = new User({
@@ -40,7 +44,7 @@ const addTeacher = async (req, res) => {
       teacher_id,
       allocated_subject,
       email,
-      password,
+      password: hashed,
       join_year,
       profile_image,
       birth_certificate,
@@ -58,11 +62,41 @@ const addTeacher = async (req, res) => {
   }
 };
 
+const loginTeacher = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    
+    
+    if (!user) {
+      return res.status(401).json({ error: "Incorrect Email" });
+    } else if (!isValidPassword) {
+      return res.status(401).json({ error: "Incorrect Password" });
+    } else {
+      const token = jwt.sign({ userId: user._id }, process.env.JWT_TOKEN);
+      //  const first_name = user.first_name;
+      //  const last_name = user.last_name;
+      //  const user_id = user._id;
+      //  const profile_image = user.profile_image;
+      //  const user_type = user.user_type;
+
+      res.json({
+        message: `${email} is Login successful`,
+        token,
+        user,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "An error occurred" });
+  }
+};
+
 const getAllTeachers = async (req, res) => {
   try {
     // Retrieve all teacher
-    const teachers = await User.find();
-
+    const teachers = await User.find({ teacher_id: { $exists: true } });
     res.json(teachers);
   } catch (error) {
     res.status(500).json({ error: "An error occurred" });
@@ -116,4 +150,17 @@ module.exports = {
   getTeacherById,
   updateTeacher,
   deleteTeacher,
+  loginTeacher,
+};
+
+// Methods or Functions
+const hashedPassword = async (password) => {
+  const saltRound = 10;
+
+  try {
+    const hashed = await bcrypt.hash(password, saltRound);
+    return hashed;
+  } catch (error) {
+    throw new Error("Password hashing failed");
+  }
 };
