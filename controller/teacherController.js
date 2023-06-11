@@ -1,4 +1,3 @@
-const { request } = require("express");
 const Teacher = require("../models/teacherModels.js");
 const User = require("../models/userModel.js");
 const bcrypt = require("bcrypt");
@@ -28,6 +27,7 @@ const addTeacher = async (req, res) => {
       other_docs,
       user_type,
     } = req.body;
+
     const hashed = await hashedPassword(password);
 
     // Create a new teacher document
@@ -68,8 +68,7 @@ const loginTeacher = async (req, res) => {
   try {
     const user = await User.findOne({ email });
     const isValidPassword = await bcrypt.compare(password, user.password);
-    
-    
+
     if (!user) {
       return res.status(401).json({ error: "Incorrect Email" });
     } else if (!isValidPassword) {
@@ -104,22 +103,23 @@ const getAllTeachers = async (req, res) => {
 };
 
 const getTeacherById = async (req, res) => {
-  const { id } = req.params;
-  const updates = req.body;
 
   try {
     // Find the teacher by ID and update the fields
-    const teacher = await Teacher.findByIdAndUpdate(id, updates, { new: true });
+    const  id  = req.params.id;
+    const teacher = await User.findById(id);
 
     if (!teacher) {
       return res.status(404).json({ error: `Teacher with ID ${id} not found` });
+    }else{
+      res.json({ message: "Teacher updated successfully", teacher });
     }
 
-    res.json({ message: "Teacher updated successfully", teacher });
+    
   } catch (error) {
     res
       .status(500)
-      .json({ error: "An error occurred while updating the teacher" });
+      .json({ error: "An error occurred" });
   }
 };
 
@@ -144,6 +144,28 @@ const deleteTeacher = async (req, res) => {
   }
 };
 
+const searchTeacher = async (req, res) => {
+  try {
+    const { first_name } = req.body;
+
+    if (!first_name) {
+      return res.status(400).json({ error: "First name is required" });
+    }
+
+    const searchQuery = new RegExp(first_name, "i");
+
+    const users = await User.find({ first_name: { $regex: searchQuery } });
+    
+    res.status(200).json(users);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error searching users' });
+  }
+};
+
+
+
 module.exports = {
   addTeacher,
   getAllTeachers,
@@ -151,6 +173,7 @@ module.exports = {
   updateTeacher,
   deleteTeacher,
   loginTeacher,
+  searchTeacher
 };
 
 // Methods or Functions
