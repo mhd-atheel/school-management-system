@@ -94,7 +94,7 @@ const userSchema = mongoose.Schema({
     required: false,
   },
 
-  class_teacher: {
+  class_teacher: { 
     type: String,
     required: false,
   },
@@ -142,6 +142,7 @@ const userSchema = mongoose.Schema({
 },
    {timestamps:true}
 );
+
 
 
 
