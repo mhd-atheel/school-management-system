@@ -1,4 +1,5 @@
 const Teacher = require("../models/teacherModels.js");
+
 const User = require("../models/userModel.js");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -103,34 +104,164 @@ const getAllTeachers = async (req, res) => {
 };
 
 const getTeacherById = async (req, res) => {
-
   try {
     // Find the teacher by ID and update the fields
-    const  id  = req.params.id;
+    const id = req.params.id;
     const teacher = await User.findById(id);
 
     if (!teacher) {
       return res.status(404).json({ error: `Teacher with ID ${id} not found` });
-    }else{
+    } else {
       res.json({ message: "Teacher updated successfully", teacher });
     }
-
-    
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "An error occurred" });
+    res.status(500).json({ error: "An error occurred" });
   }
 };
 
+// Update a user by ID
 const updateTeacher = async (req, res) => {
   try {
-    const id = req.params.id;
-    const body = req.body;
-    const teacher = await Teacher.findByIdAndUpdate(id, body, { new: true });
-    res.status(201).json(teacher);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+    const userId = req.params.id;
+
+    // Get the allowed fields from the user model
+    const allowedFields = Object.keys(User.schema.paths);
+
+    // Get the fields in the request body
+    const fieldsToUpdate = Object.keys(req.body);
+
+    // Check for any extra fields not in the user model
+    const invalidFields = fieldsToUpdate.filter(
+      (field) => !allowedFields.includes(field)
+    );
+
+    if (invalidFields.length > 0) {
+      console.log("Invalid fields found:", invalidFields);
+      res
+        .status(400)
+        .json({ error: "Invalid fields found", fields: invalidFields });
+      return;
+    }
+
+    // Build the updatedUser object
+    const updatedUser = {};
+
+    if (req.body.first_name) {
+      updatedUser.first_name = req.body.first_name;
+    }
+
+    if (req.body.last_name) {
+      updatedUser.last_name = req.body.last_name;
+    }
+
+    if (req.body.age) {
+      updatedUser.age = req.body.age;
+    }
+
+    if (req.body.dob) {
+      updatedUser.dob = req.body.dob;
+    }
+
+    if (req.body.address) {
+      updatedUser.address = req.body.address;
+    }
+
+    if (req.body.nic) {
+      updatedUser.nic = req.body.nic;
+    }
+
+    if (req.body.telephone) {
+      updatedUser.telephone = req.body.telephone;
+    }
+
+    if (req.body.qualification) {
+      updatedUser.qualification = req.body.qualification;
+    }
+
+    if (req.body.status) {
+      updatedUser.status = req.body.status;
+    }
+
+    if (req.body.teacher_id) {
+      updatedUser.teacher_id = req.body.teacher_id;
+    }
+
+    if (req.body.allocated_subject) {
+      updatedUser.allocated_subject = req.body.allocated_subject;
+    }
+
+    if (req.body.email) {
+      updatedUser.email = req.body.email;
+    }
+
+    if (req.body.password) {
+      updatedUser.password = req.body.password;
+    }
+
+    if (req.body.join_year) {
+      updatedUser.join_year = req.body.join_year;
+    }
+
+    if (req.body.profile_image) {
+      updatedUser.profile_image = req.body.profile_image;
+    }
+
+    if (req.body.birth_certificate) {
+      updatedUser.birth_certificate = req.body.birth_certificate;
+    }
+
+    if (req.body.nic_doc) {
+      updatedUser.nic_doc = req.body.nic_doc;
+    }
+
+    if (req.body.end_year) {
+      updatedUser.end_year = req.body.end_year;
+    }
+
+    if (req.body.other_docs) {
+      updatedUser.other_docs = req.body.other_docs;
+    }
+
+    if (req.body.user_type) {
+      updatedUser.user_type = req.body.user_type;
+    }
+    if (
+      req.body.job ||
+      req.body.father_name ||
+      req.body.mother_name ||
+      req.body.student_index ||
+      req.body.before_school ||
+      req.body.grade ||
+      req.body.staff_id
+    ) {
+      res
+      .status(400)
+      .json({ error: "Invalid fields found" });
+      return;
+    }
+
+    // ... (other fields)
+
+    // Update the user document
+    const result = await User.findByIdAndUpdate(userId, updatedUser);
+
+    if (!result) {
+      console.log("User not found");
+      res.status(404).send("User not found");
+      return;
+    }
+
+    console.log("User updated successfully");
+    res
+      .status(200)
+      .json({
+        status: 200,
+        message: "User Updated Succesfully",
+        response: result,
+      });
+  } catch (err) {
+    console.log("Error occurred while updating user", err);
+    res.status(500).send("Internal server error");
   }
 };
 
@@ -155,16 +286,13 @@ const searchTeacher = async (req, res) => {
     const searchQuery = new RegExp(first_name, "i");
 
     const users = await User.find({ first_name: { $regex: searchQuery } });
-    
-    res.status(200).json(users);
 
+    res.status(200).json(users);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error searching users' });
+    res.status(500).json({ error: "Error searching users" });
   }
 };
-
-
 
 module.exports = {
   addTeacher,
@@ -173,7 +301,7 @@ module.exports = {
   updateTeacher,
   deleteTeacher,
   loginTeacher,
-  searchTeacher
+  searchTeacher,
 };
 
 // Methods or Functions
