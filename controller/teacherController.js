@@ -1,4 +1,5 @@
 const Teacher = require("../models/teacherModels.js");
+const Salary = require("../models/salaryModel.js")
 
 const User = require("../models/userModel.js");
 const bcrypt = require("bcrypt");
@@ -63,6 +64,11 @@ const addTeacher = async (req, res) => {
   }
 };
 
+
+
+
+
+
 const loginTeacher = async (req, res) => {
   const { email, password } = req.body;
 
@@ -93,6 +99,10 @@ const loginTeacher = async (req, res) => {
   }
 };
 
+
+
+
+
 const getAllTeachers = async (req, res) => {
   try {
     // Retrieve all teacher
@@ -118,6 +128,10 @@ const getTeacherById = async (req, res) => {
     res.status(500).json({ error: "An error occurred" });
   }
 };
+
+
+
+
 
 // Update a user by ID
 const updateTeacher = async (req, res) => {
@@ -265,6 +279,11 @@ const updateTeacher = async (req, res) => {
   }
 };
 
+
+
+
+
+
 const deleteTeacher = async (req, res) => {
   try {
     const id = req.params.id;
@@ -274,6 +293,10 @@ const deleteTeacher = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
+
+
+
 
 const searchTeacher = async (req, res) => {
   try {
@@ -294,15 +317,28 @@ const searchTeacher = async (req, res) => {
   }
 };
 
-module.exports = {
-  addTeacher,
-  getAllTeachers,
-  getTeacherById,
-  updateTeacher,
-  deleteTeacher,
-  loginTeacher,
-  searchTeacher,
+
+
+const getTeacherSalary = async (req, res,next) => {
+  try {
+    const user_id = req.body
+
+    const salary = await Salary.find().where({"user_id":user_id});
+    next()
+    console.log("Succuss >>>>>>>>>>>>>>>>>><<<<<<<<<<");
+    console.log(salary); 
+    res.status(200).json(salary);
+    res.send("Success")
+  } catch (error) {
+    res.status(500).json({ error: "An error occurred" });
+  }
 };
+
+
+
+
+
+
 
 // Methods or Functions
 const hashedPassword = async (password) => {
@@ -315,3 +351,18 @@ const hashedPassword = async (password) => {
     throw new Error("Password hashing failed");
   }
 };
+
+
+module.exports = {
+  addTeacher,
+  getAllTeachers,
+  getTeacherById,
+  updateTeacher,
+  deleteTeacher,
+  loginTeacher,
+  searchTeacher,
+  getTeacherSalary
+};
+
+
+
