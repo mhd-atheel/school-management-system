@@ -370,28 +370,28 @@ const getTeacherSalary = async (req, res) => {
 };
 
 
-const sendMail = async(req,res)=>{
+// const sendMail = async(req,res)=>{
 
     
-      const mailOptions = {
-        from: 'easyschoolatsrilanka@gmail.com',
-        to: 'aathilmazz1234@gmail.com',
-        subject: 'Test Email',
-        text: 'This is a test email sent using Nodemailer in Express.js'
-      };
+//       const mailOptions = {
+//         from: 'easyschoolatsrilanka@gmail.com',
+//         to: 'aathilmazz1234@gmail.com',
+//         subject: 'Test Email',
+//         text: 'This is a test email sent using Nodemailer in Express.js'
+//       };
 
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          console.error(error);
-          res.send('Error sending email');
-        } else {
-          console.log('Email sent: ' + info.response);
-          res.send('Email sent successfully');
-        }
-      });
+//       transporter.sendMail(mailOptions, (error, info) => {
+//         if (error) {
+//           console.error(error);
+//           res.send('Error sending email');
+//         } else {
+//           console.log('Email sent: ' + info.response);
+//           res.send('Email sent successfully');
+//         }
+//       });
    
     
-}
+// }
 
 
 
