@@ -1,5 +1,6 @@
 const Teacher = require("../models/teacherModels.js");
 const Salary = require("../models/salaryModel.js")
+const nodemailer  = require('nodemailer')
 
 const User = require("../models/userModel.js");
 const bcrypt = require("bcrypt");
@@ -56,7 +57,28 @@ const addTeacher = async (req, res) => {
       user_type,
     });
 
+    const mailOptions = {
+      from: 'easyschoolatsrilanka@gmail.com',
+      to: email,
+      subject: 'Test Email',
+      text: `your email is ${email} and password is ${password}`
+    };
+
     await teacher.save();
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error(error);
+        res.send('Error sending email');
+      } else {
+        console.log('Email sent: ' + info.response);
+        res.send('Email sent successfully');
+      }
+    });
+
+
+    
+
 
     res.json({ message: "Teacher created successfully", teacher });
   } catch (error) {
@@ -108,6 +130,7 @@ const getAllTeachers = async (req, res) => {
     // Retrieve all teacher
     const teachers = await User.find({ teacher_id: { $exists: true } });
     res.json(teachers);
+    console.log(teachers);
   } catch (error) {
     res.status(500).json({ error: "An error occurred" });
   }
@@ -319,20 +342,57 @@ const searchTeacher = async (req, res) => {
 
 
 
-const getTeacherSalary = async (req, res,next) => {
+const getTeacherSalary = async (req, res) => {
   try {
-    const user_id = req.body
+    const {user_id} = req.body
+    const id = await User.findById(user_id)
 
-    const salary = await Salary.find().where({"user_id":user_id});
-    next()
+    if (!user_id) {
+      return res.status(400).json({ error: "User Id  is required" });
+    }
+    if(!id){
+      return res.status(400).json({ error: "User Id Not Found" });
+    }
+
+
+    const searchQuery = new RegExp(user_id);
+
+    const salary = await Salary.find({ user_id: { $regex: searchQuery } });
+
+   
     console.log("Succuss >>>>>>>>>>>>>>>>>><<<<<<<<<<");
     console.log(salary); 
     res.status(200).json(salary);
-    res.send("Success")
   } catch (error) {
-    res.status(500).json({ error: "An error occurred" });
+    res.status(500).json({ error: "An error occurred " });
+    console.log(error);
   }
 };
+
+
+const sendMail = async(req,res)=>{
+
+    
+      const mailOptions = {
+        from: 'easyschoolatsrilanka@gmail.com',
+        to: 'aathilmazz1234@gmail.com',
+        subject: 'Test Email',
+        text: 'This is a test email sent using Nodemailer in Express.js'
+      };
+
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.error(error);
+          res.send('Error sending email');
+        } else {
+          console.log('Email sent: ' + info.response);
+          res.send('Email sent successfully');
+        }
+      });
+   
+    
+}
+
 
 
 
@@ -353,6 +413,16 @@ const hashedPassword = async (password) => {
 };
 
 
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'easyschoolatsrilanka@gmail.com',
+    pass: 'cdllsecggvoinglj'
+  }
+});
+
+
+
 module.exports = {
   addTeacher,
   getAllTeachers,
@@ -361,7 +431,8 @@ module.exports = {
   deleteTeacher,
   loginTeacher,
   searchTeacher,
-  getTeacherSalary
+  getTeacherSalary,
+  sendMail
 };
 
 
