@@ -1,4 +1,6 @@
 const Teacher = require("../models/teacherModels.js");
+const Salary = require("../models/salaryModel.js")
+const nodemailer  = require('nodemailer')
 
 const User = require("../models/userModel.js");
 const bcrypt = require("bcrypt");
@@ -55,13 +57,39 @@ const addTeacher = async (req, res) => {
       user_type,
     });
 
+    const mailOptions = {
+      from: 'easyschoolatsrilanka@gmail.com',
+      to: email,
+      subject: 'Test Email',
+      text: `your email is ${email} and password is ${password}`
+    };
+
     await teacher.save();
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error(error);
+        res.send('Error sending email');
+      } else {
+        console.log('Email sent: ' + info.response);
+        res.send('Email sent successfully');
+      }
+    });
+
+
+    
+
 
     res.json({ message: "Teacher created successfully", teacher });
   } catch (error) {
     res.status(500).json({ error: "An error occurred" });
   }
 };
+
+
+
+
+
 
 const loginTeacher = async (req, res) => {
   const { email, password } = req.body;
@@ -93,11 +121,16 @@ const loginTeacher = async (req, res) => {
   }
 };
 
+
+
+
+
 const getAllTeachers = async (req, res) => {
   try {
     // Retrieve all teacher
     const teachers = await User.find({ teacher_id: { $exists: true } });
     res.json(teachers);
+    console.log(teachers);
   } catch (error) {
     res.status(500).json({ error: "An error occurred" });
   }
@@ -118,6 +151,10 @@ const getTeacherById = async (req, res) => {
     res.status(500).json({ error: "An error occurred" });
   }
 };
+
+
+
+
 
 // Update a user by ID
 const updateTeacher = async (req, res) => {
@@ -265,6 +302,11 @@ const updateTeacher = async (req, res) => {
   }
 };
 
+
+
+
+
+
 const deleteTeacher = async (req, res) => {
   try {
     const id = req.params.id;
@@ -274,6 +316,10 @@ const deleteTeacher = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
+
+
+
 
 const searchTeacher = async (req, res) => {
   try {
@@ -294,15 +340,65 @@ const searchTeacher = async (req, res) => {
   }
 };
 
-module.exports = {
-  addTeacher,
-  getAllTeachers,
-  getTeacherById,
-  updateTeacher,
-  deleteTeacher,
-  loginTeacher,
-  searchTeacher,
+
+
+const getTeacherSalary = async (req, res) => {
+  try {
+    const {user_id} = req.body
+    const id = await User.findById(user_id)
+
+    if (!user_id) {
+      return res.status(400).json({ error: "User Id  is required" });
+    }
+    if(!id){
+      return res.status(400).json({ error: "User Id Not Found" });
+    }
+
+
+    const searchQuery = new RegExp(user_id);
+
+    const salary = await Salary.find({ user_id: { $regex: searchQuery } });
+
+   
+    console.log("Succuss >>>>>>>>>>>>>>>>>><<<<<<<<<<");
+    console.log(salary); 
+    res.status(200).json(salary);
+  } catch (error) {
+    res.status(500).json({ error: "An error occurred " });
+    console.log(error);
+  }
 };
+
+
+// const sendMail = async(req,res)=>{
+
+    
+//       const mailOptions = {
+//         from: 'easyschoolatsrilanka@gmail.com',
+//         to: 'aathilmazz1234@gmail.com',
+//         subject: 'Test Email',
+//         text: 'This is a test email sent using Nodemailer in Express.js'
+//       };
+
+//       transporter.sendMail(mailOptions, (error, info) => {
+//         if (error) {
+//           console.error(error);
+//           res.send('Error sending email');
+//         } else {
+//           console.log('Email sent: ' + info.response);
+//           res.send('Email sent successfully');
+//         }
+//       });
+   
+    
+// }
+
+
+
+
+
+
+
 
 // Methods or Functions
 const hashedPassword = async (password) => {
@@ -315,3 +411,29 @@ const hashedPassword = async (password) => {
     throw new Error("Password hashing failed");
   }
 };
+
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'easyschoolatsrilanka@gmail.com',
+    pass: 'cdllsecggvoinglj'
+  }
+});
+
+
+
+module.exports = {
+  addTeacher,
+  getAllTeachers,
+  getTeacherById,
+  updateTeacher,
+  deleteTeacher,
+  loginTeacher,
+  searchTeacher,
+  getTeacherSalary,
+  sendMail
+};
+
+
+
